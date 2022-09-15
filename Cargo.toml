@@ -1,5 +1,5 @@
 [package]
-name = "hybrid_signature_scheme"
+name = "hybrid_cryptography"
 version = "0.1.0"
 authors = ["Peter Willemsen <peter@codebuffet.co>"]
 edition = "2021"
