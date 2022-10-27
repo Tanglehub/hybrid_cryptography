@@ -44,7 +44,7 @@ pub fn parse_combined_public_key(purpose: AlgorithmPurpose, combined_public_key:
         id_mapping.insert(scheme_id, pk.to_vec());
         idx += pk_length;
     }
-    Ok(return ParsedCombinedPublicKey {
+    Ok(ParsedCombinedPublicKey {
         id_mapping: id_mapping
     })
 }
