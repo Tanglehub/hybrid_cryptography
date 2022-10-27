@@ -9,20 +9,19 @@ pub struct ParsedCombinedPublicKey {
     pub id_mapping: HashMap<(u8, u8), Vec<u8>>
 }
 
-pub fn parse_combined_public_key(purpose: AlgorithmPurpose, combined_public_key: &[u8]) -> Result<ParsedCombinedPublicKey, String> {
+pub fn parse_combined_public_key(purpose: AlgorithmPurpose, combined_public_key: &[u8]) -> ParsedCombinedPublicKey {
     let mapping = get_id_to_info_mapping(purpose);
     let mut idx: usize = 0;
     let mut id_mapping: HashMap<(u8, u8), Vec<u8>> = HashMap::new();
     while idx < combined_public_key.len() {
         let scheme_id = (combined_public_key[idx], combined_public_key[idx + 1]);
-        let res = mapping.get(&scheme_id);
-        if res.is_none(){
-            return Err(format!(
+        let scheme_info = mapping.get(&scheme_id).expect(
+            format!(
                 "Algorithm with id {} and config {} not found!",
                 scheme_id.0, scheme_id.1
-            ))
-        }
-        let scheme_info = res.unwrap();
+            )
+            .as_str(),
+        );
         idx += 2;
         let mut pk_length: usize = 0;
         if matches!(scheme_info.pk_size_info.kind, SizeKind::VariableSized) {
@@ -44,7 +43,7 @@ pub fn parse_combined_public_key(purpose: AlgorithmPurpose, combined_public_key:
         id_mapping.insert(scheme_id, pk.to_vec());
         idx += pk_length;
     }
-    Ok(ParsedCombinedPublicKey {
+    return ParsedCombinedPublicKey {
         id_mapping: id_mapping
-    })
+    }
 }
