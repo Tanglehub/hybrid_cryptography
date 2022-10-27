@@ -16,7 +16,7 @@ pub fn parse_combined_public_key(purpose: AlgorithmPurpose, combined_public_key:
     while idx < combined_public_key.len() {
         let scheme_id = (combined_public_key[idx], combined_public_key[idx + 1]);
         let res = mapping.get(&scheme_id);
-        if res.is_err(){
+        if res.is_none(){
             return Err(format!(
                 "Algorithm with id {} and config {} not found!",
                 scheme_id.0, scheme_id.1
