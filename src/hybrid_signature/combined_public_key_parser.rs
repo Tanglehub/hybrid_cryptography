@@ -38,18 +38,18 @@ pub fn parse_combined_public_key(purpose: AlgorithmPurpose, combined_public_key:
                 let pk = &combined_public_key[idx..idx + pk_length];
                 id_mapping.insert(scheme_id, pk.to_vec());
                 idx += pk_length;
-                }
                 Ok(return ParsedCombinedPublicKey {
                     id_mapping: id_mapping
                 })
+                }
+                Err(_)=>{
+                    Err(format!(
+                        "Algorithm with id {} and config {} not found!",
+                        scheme_id.0, scheme_id.1
+                    ))
+                }
+                
             }
-            Err(_)=>{
-                Err(format!(
-                    "Algorithm with id {} and config {} not found!",
-                    scheme_id.0, scheme_id.1
-                ))
-            }
-        }
-        
-        
+            
+        }       
 }
