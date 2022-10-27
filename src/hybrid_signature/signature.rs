@@ -5,6 +5,7 @@ use crate::schemes::signature::get_id_to_ref_mapping;
 use crate::schemes::{AlgorithmPurpose, SizeKind};
 use std::convert::TryInto;
 use std::mem;
+use log::error;
 
 pub fn sign_message(seed: &[u8], message: &[u8]) -> Vec<u8> {
     let mapping = get_id_to_ref_mapping();
@@ -44,8 +45,15 @@ pub fn sign_message(seed: &[u8], message: &[u8]) -> Vec<u8> {
 pub fn verify_message(message: &[u8], combined_public_key: &[u8], signature: &[u8]) -> bool {
     let mapping = get_id_to_ref_mapping();
     let mut idx: usize = 0;
-    let parsed_combined_public_key =
-        parse_combined_public_key(AlgorithmPurpose::Signature, &combined_public_key);
+    let parsed_combined_public_key = match parse_combined_public_key(AlgorithmPurpose::Signature, &combined_public_key) {
+        Ok(pk) => {
+            pk
+        }
+        Err(e) => {
+            error!("Error parsing public key: {}... verify_message will return false!", e);
+            return false;
+        }
+    };
     while idx < signature.len() {
         // Get the ID and configuration
         let scheme_id = (signature[idx], signature[idx + 1]);

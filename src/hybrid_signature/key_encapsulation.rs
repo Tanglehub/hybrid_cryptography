@@ -13,7 +13,7 @@ const SHARED_SECRET_SALT: &[u8; 48] = &hex!("ca394d16444e060f4006af7a1a44662e29d
 pub fn encapsulate(_seed: &[u8], pk_other_bytes: &[u8]) -> (Vec<u8>, Vec<u8>) {
     let mapping = get_id_to_ref_mapping();
     let parsed_combined_public_key =
-        parse_combined_public_key(AlgorithmPurpose::KeyEncapsulation, &pk_other_bytes);
+        parse_combined_public_key(AlgorithmPurpose::KeyEncapsulation, &pk_other_bytes).unwrap();
     let mut ciphertexts = Vec::<u8>::new();
 
     let mut hasher = blake3::Hasher::new();
